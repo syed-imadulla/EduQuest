@@ -1,0 +1,1080 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EduQuest - Leaderboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        :root {
+            --primary: #4361ee;
+            --primary-dark: #3a56d4;
+            --secondary: #7209b7;
+            --accent: #f72585;
+            --accent-dark: #b5179e;
+            --success: #4cc9f0;
+            --warning: #ffd166;
+            --danger: #ef476f;
+            --light: #f8f9fa;
+            --dark: #212529;
+            --gray: #6c757d;
+            --light-gray: #e9ecef;
+            --gradient: linear-gradient(135deg, #4361ee 0%, #7209b7 100%);
+            --accent-gradient: linear-gradient(135deg, #f72585 0%, #b5179e 100%);
+            --card-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
+        }
+
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            color: var(--dark);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header & Navigation Styles */
+        header {
+            background: white;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+        }
+
+        .logo-icon {
+            background: var(--gradient);
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+        }
+
+        .logo-text {
+            font-size: 24px;
+            font-weight: 700;
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* Navigation Styles */
+        .nav-links {
+            display: flex;
+            gap: 30px;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--dark);
+            font-weight: 600;
+            transition: var(--transition);
+            position: relative;
+            padding: 5px 0;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary);
+        }
+
+        .nav-links a.active {
+            color: var(--primary);
+        }
+
+        .nav-links a.active::after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 3px;
+            bottom: 0;
+            left: 0;
+            background: var(--primary);
+            border-radius: 2px;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .user-avatar {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            background: var(--primary);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+
+        .role-badge {
+            background: var(--primary);
+            color: white;
+            padding: 3px 10px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .teacher-badge {
+            background: var(--accent);
+        }
+
+        /* Page Header */
+        .page-header {
+            text-align: center;
+            margin: 40px 0 30px;
+        }
+
+        .page-title {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .page-subtitle {
+            font-size: 1.2rem;
+            color: var(--gray);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* Leaderboard Controls */
+        .leaderboard-controls {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: var(--card-shadow);
+            margin-bottom: 30px;
+        }
+
+        .controls-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+
+        .control-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .control-label {
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--dark);
+        }
+
+        .control-select {
+            padding: 12px 15px;
+            border: 2px solid var(--light-gray);
+            border-radius: 8px;
+            font-size: 1rem;
+            background: white;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .control-select:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        /* Stats Overview */
+        .stats-overview {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: var(--card-shadow);
+            transition: var(--transition);
+        }
+
+        .stat-card:hover {
+            transform: translateY(-3px);
+        }
+
+        .stat-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            background: var(--gradient);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            margin: 0 auto 15px;
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: var(--gray);
+        }
+
+        /* Leaderboard Container */
+        .leaderboard-container {
+            background: white;
+            border-radius: 15px;
+            box-shadow: var(--card-shadow);
+            overflow: hidden;
+            margin-bottom: 30px;
+        }
+
+        .leaderboard-header {
+            background: var(--gradient);
+            color: white;
+            padding: 20px 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .leaderboard-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        .leaderboard-subtitle {
+            opacity: 0.9;
+            font-size: 0.9rem;
+        }
+
+        /* Leaderboard List */
+        .leaderboard-list {
+            max-height: 600px;
+            overflow-y: auto;
+        }
+
+        .leaderboard-item {
+            display: flex;
+            align-items: center;
+            padding: 20px 25px;
+            border-bottom: 1px solid var(--light-gray);
+            transition: var(--transition);
+        }
+
+        .leaderboard-item:hover {
+            background: var(--light);
+        }
+
+        .leaderboard-item.current-user {
+            background: rgba(67, 97, 238, 0.05);
+            border-left: 4px solid var(--primary);
+        }
+
+        .leaderboard-rank {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1.1rem;
+            margin-right: 20px;
+            flex-shrink: 0;
+        }
+
+        .rank-1 .leaderboard-rank {
+            background: var(--warning);
+            color: var(--dark);
+        }
+
+        .rank-2 .leaderboard-rank {
+            background: var(--light-gray);
+            color: var(--dark);
+        }
+
+        .rank-3 .leaderboard-rank {
+            background: #cd7f32;
+            color: white;
+        }
+
+        .rank-other .leaderboard-rank {
+            background: var(--light-gray);
+            color: var(--gray);
+        }
+
+        .user-info-large {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            flex-grow: 1;
+        }
+
+        .user-avatar-large {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: var(--primary);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+
+        .user-details h3 {
+            margin-bottom: 5px;
+            font-weight: 600;
+        }
+
+        .user-details p {
+            color: var(--gray);
+            font-size: 0.9rem;
+        }
+
+        .score-info {
+            text-align: right;
+        }
+
+        .score-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 5px;
+        }
+
+        .score-label {
+            font-size: 0.8rem;
+            color: var(--gray);
+        }
+
+        .badge-indicator {
+            display: flex;
+            gap: 5px;
+            margin-top: 5px;
+        }
+
+        .badge {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: var(--warning);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7rem;
+            color: var(--dark);
+        }
+
+        /* Achievement Section */
+        .achievement-section {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: var(--card-shadow);
+            margin-bottom: 30px;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            color: var(--dark);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section-title i {
+            color: var(--primary);
+        }
+
+        .achievements-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 20px;
+        }
+
+        .achievement-card {
+            text-align: center;
+            padding: 20px;
+            border-radius: 10px;
+            background: var(--light);
+            transition: var(--transition);
+        }
+
+        .achievement-card.earned {
+            background: white;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+
+        .achievement-card.earned:hover {
+            transform: translateY(-3px);
+        }
+
+        .achievement-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            margin: 0 auto 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+        }
+
+        .achievement-card.earned .achievement-icon {
+            background: var(--gradient);
+            color: white;
+        }
+
+        .achievement-card.locked .achievement-icon {
+            background: var(--light-gray);
+            color: var(--gray);
+        }
+
+        .achievement-name {
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .achievement-desc {
+            font-size: 0.8rem;
+            color: var(--gray);
+        }
+
+        /* Teacher View */
+        .teacher-view {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: var(--card-shadow);
+            margin-bottom: 30px;
+            display: none;
+        }
+
+        .teacher-view.active {
+            display: block;
+        }
+
+        .class-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+
+        .class-stat {
+            text-align: center;
+            padding: 20px;
+            background: var(--light);
+            border-radius: 10px;
+        }
+
+        .class-stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 5px;
+        }
+
+        .class-stat-label {
+            font-size: 0.9rem;
+            color: var(--gray);
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 30px 0;
+            color: var(--gray);
+            font-size: 0.9rem;
+            margin-top: 50px;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .nav-links {
+                gap: 15px;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+
+            .page-title {
+                font-size: 2rem;
+            }
+
+            .controls-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .leaderboard-item {
+                flex-direction: column;
+                text-align: center;
+                gap: 15px;
+            }
+
+            .user-info-large {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .score-info {
+                text-align: center;
+            }
+
+            .achievements-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .class-stats {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Animation */
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header with Navigation -->
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <a href="index.html" class="logo">
+                    <div class="logo-icon">
+                        <i class="fas fa-trophy"></i>
+                    </div>
+                    <div class="logo-text">EduQuest</div>
+                </a>
+                
+                <!-- Dynamic Navigation based on role -->
+                <nav class="nav-links" id="navLinks">
+                    <!-- Navigation will be dynamically set based on user role -->
+                </nav>
+                
+                <div class="user-info">
+                    <div class="user-avatar" id="userAvatar">U</div>
+                    <span id="userDisplay">User</span>
+                    <div class="role-badge" id="roleBadge">Student</div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container">
+        <!-- Page Header -->
+        <section class="page-header">
+            <h1 class="page-title">Leaderboard</h1>
+            <p class="page-subtitle">Track progress, compare scores, and celebrate achievements</p>
+        </section>
+
+        <!-- Leaderboard Controls -->
+        <section class="leaderboard-controls">
+            <div class="controls-grid">
+                <div class="control-group">
+                    <label class="control-label">Time Period</label>
+                    <select class="control-select" id="timeFilter">
+                        <option value="all-time">All Time</option>
+                        <option value="this-week">This Week</option>
+                        <option value="this-month">This Month</option>
+                        <option value="last-month">Last Month</option>
+                    </select>
+                </div>
+                
+                <div class="control-group">
+                    <label class="control-label">Subject</label>
+                    <select class="control-select" id="subjectFilter">
+                        <option value="all">All Subjects</option>
+                        <option value="math">Mathematics</option>
+                        <option value="science">Science</option>
+                        <option value="english">English</option>
+                        <option value="environment">Environment</option>
+                    </select>
+                </div>
+                
+                <div class="control-group">
+                    <label class="control-label">Class Group</label>
+                    <select class="control-select" id="classFilter">
+                        <option value="all">All Classes</option>
+                        <option value="class-a">Class A</option>
+                        <option value="class-b">Class B</option>
+                        <option value="class-c">Class C</option>
+                    </select>
+                </div>
+            </div>
+        </section>
+
+        <!-- Stats Overview -->
+        <section class="stats-overview" id="statsOverview">
+            <!-- Stats will be dynamically generated -->
+        </section>
+
+        <!-- Leaderboard Container -->
+        <section class="leaderboard-container">
+            <div class="leaderboard-header">
+                <div>
+                    <h2 class="leaderboard-title" id="leaderboardTitle">Global Leaderboard</h2>
+                    <div class="leaderboard-subtitle" id="leaderboardSubtitle">Top performers across all subjects</div>
+                </div>
+                <div style="display: flex; gap: 10px; align-items: center;">
+                    <span id="totalParticipants">24 students</span>
+                    <div style="background: rgba(255,255,255,0.2); padding: 5px 10px; border-radius: 12px;">
+                        Updated: <span id="lastUpdated">Just now</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="leaderboard-list" id="leaderboardList">
+                <!-- Leaderboard items will be dynamically generated -->
+            </div>
+        </section>
+
+        <!-- Achievement Section (Student View) -->
+        <section class="achievement-section" id="achievementSection">
+            <div class="section-header">
+                <h2 class="section-title"><i class="fas fa-award"></i> Your Achievements</h2>
+                <div style="color: var(--gray); font-size: 0.9rem;">
+                    <span id="achievementsCount">3</span> of <span>12</span> badges earned
+                </div>
+            </div>
+            
+            <div class="achievements-grid" id="achievementsGrid">
+                <!-- Achievements will be dynamically generated -->
+            </div>
+        </section>
+
+        <!-- Teacher View -->
+        <section class="teacher-view" id="teacherView">
+            <div class="section-header">
+                <h2 class="section-title"><i class="fas fa-chart-bar"></i> Class Analytics</h2>
+                <button class="control-select" onclick="exportReport()">
+                    <i class="fas fa-download"></i> Export Report
+                </button>
+            </div>
+            
+            <div class="class-stats">
+                <div class="class-stat">
+                    <div class="class-stat-value" id="classAverage">78%</div>
+                    <div class="class-stat-label">Class Average</div>
+                </div>
+                <div class="class-stat">
+                    <div class="class-stat-value" id="topScore">1250</div>
+                    <div class="class-stat-label">Top Score</div>
+                </div>
+                <div class="class-stat">
+                    <div class="class-stat-value" id="participationRate">92%</div>
+                    <div class="class-stat-label">Participation</div>
+                </div>
+                <div class="class-stat">
+                    <div class="class-stat-value" id="improvementRate">+15%</div>
+                    <div class="class-stat-label">Improvement</div>
+                </div>
+            </div>
+            
+            <div style="text-align: center; margin-top: 20px;">
+                <button class="control-select" onclick="viewDetailedAnalytics()" style="background: var(--primary); color: white;">
+                    <i class="fas fa-chart-line"></i> View Detailed Analytics
+                </button>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <p>EduQuest &copy; 2023 - Learning Achievement Platform</p>
+        </div>
+    </footer>
+
+    <script>
+        // Sample leaderboard data
+        const leaderboardData = {
+            students: [
+                { id: 1, name: "Sarah Chen", score: 1850, subject: "math", badges: 5, avatar: "S", class: "class-a" },
+                { id: 2, name: "Mike Rodriguez", score: 1670, subject: "science", badges: 4, avatar: "M", class: "class-b" },
+                { id: 3, name: "Emma Wilson", score: 1520, subject: "english", badges: 3, avatar: "E", class: "class-a" },
+                { id: 4, name: "Alex Johnson", score: 1250, subject: "math", badges: 3, avatar: "A", class: "class-c" },
+                { id: 5, name: "David Kim", score: 1180, subject: "environment", badges: 2, avatar: "D", class: "class-b" },
+                { id: 6, name: "Sophia Williams", score: 980, subject: "science", badges: 2, avatar: "S", class: "class-a" },
+                { id: 7, name: "James Brown", score: 920, subject: "english", badges: 1, avatar: "J", class: "class-c" },
+                { id: 8, name: "Olivia Martinez", score: 870, subject: "math", badges: 1, avatar: "O", class: "class-b" }
+            ],
+            achievements: [
+                { id: 1, name: "Quick Starter", desc: "Complete first quiz", earned: true, icon: "fa-rocket" },
+                { id: 2, name: "Math Whiz", desc: "Score 100% on math quiz", earned: true, icon: "fa-calculator" },
+                { id: 3, name: "Science Explorer", desc: "Complete 5 science quizzes", earned: false, icon: "fa-flask" },
+                { id: 4, name: "Perfect Score", desc: "Get 100% on any quiz", earned: true, icon: "fa-star" },
+                { id: 5, name: "Week Warrior", desc: "Complete quizzes for 7 days", earned: false, icon: "fa-calendar" },
+                { id: 6, name: "Book Worm", desc: "Read all study materials", earned: false, icon: "fa-book" }
+            ],
+            classStats: {
+                average: 78,
+                topScore: 1250,
+                participation: 92,
+                improvement: 15
+            }
+        };
+
+        // Current user and filters
+        let currentUser = null;
+        let currentFilters = {
+            timePeriod: 'all-time',
+            subject: 'all',
+            classGroup: 'all'
+        };
+
+        // Initialize the page
+        function initLeaderboard() {
+            loadUserData();
+            setupNavigation();
+            setupEventListeners();
+            applyFilters();
+        }
+
+        // Load user data and role
+        function loadUserData() {
+            const role = localStorage.getItem('eduquest_userRole') || 'student';
+            const userName = localStorage.getItem('eduquest_user') || 'User';
+            
+            currentUser = {
+                name: userName,
+                role: role,
+                avatar: userName.charAt(0).toUpperCase()
+            };
+
+            document.getElementById('userDisplay').textContent = userName;
+            document.getElementById('userAvatar').textContent = currentUser.avatar;
+            
+            const roleBadge = document.getElementById('roleBadge');
+            roleBadge.textContent = role.charAt(0).toUpperCase() + role.slice(1);
+            
+            if (role === 'teacher') {
+                roleBadge.classList.add('teacher-badge');
+                document.getElementById('teacherView').classList.add('active');
+                document.getElementById('achievementSection').style.display = 'none';
+            }
+        }
+
+        // Setup dynamic navigation based on role
+        function setupNavigation() {
+            const navLinks = document.getElementById('navLinks');
+            const isTeacher = currentUser.role === 'teacher';
+            
+            navLinks.innerHTML = isTeacher ? `
+                <a href="teacher-dashboard.html">Dashboard</a>
+                <a href="leaderboard.html" class="active">Leaderboard</a>
+                <a href="index.html">Switch Role</a>
+            ` : `
+                <a href="student-dashboard.html">Dashboard</a>
+                <a href="student-quiz.html">Quizzes</a>
+                <a href="student-lectures.html">Lectures</a>
+                <a href="leaderboard.html" class="active">Leaderboard</a>
+            `;
+        }
+
+        // Setup event listeners for filters
+        function setupEventListeners() {
+            document.getElementById('timeFilter').addEventListener('change', function() {
+                currentFilters.timePeriod = this.value;
+                applyFilters();
+            });
+            
+            document.getElementById('subjectFilter').addEventListener('change', function() {
+                currentFilters.subject = this.value;
+                applyFilters();
+            });
+            
+            document.getElementById('classFilter').addEventListener('change', function() {
+                currentFilters.classGroup = this.value;
+                applyFilters();
+            });
+        }
+
+        // Apply filters and update display
+        function applyFilters() {
+            updateStats();
+            renderLeaderboard();
+            updateLeaderboardTitle();
+        }
+
+        // Update statistics overview
+        function updateStats() {
+            const statsContainer = document.getElementById('statsOverview');
+            const isTeacher = currentUser.role === 'teacher';
+            
+            if (isTeacher) {
+                statsContainer.innerHTML = `
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <div class="stat-value">${leaderboardData.students.length}</div>
+                        <div class="stat-label">Total Students</div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                        <div class="stat-value">${leaderboardData.classStats.average}%</div>
+                        <div class="stat-label">Class Average</div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-trophy"></i>
+                        </div>
+                        <div class="stat-value">${leaderboardData.classStats.topScore}</div>
+                        <div class="stat-label">Top Score</div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-star"></i>
+                        </div>
+                        <div class="stat-value">${leaderboardData.classStats.participation}%</div>
+                        <div class="stat-label">Participation</div>
+                    </div>
+                `;
+            } else {
+                // Find current user's rank and stats
+                const userRank = leaderboardData.students.findIndex(student => 
+                    student.name === currentUser.name
+                ) + 1;
+                
+                const userScore = leaderboardData.students.find(student => 
+                    student.name === currentUser.name
+                )?.score || 0;
+                
+                statsContainer.innerHTML = `
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-trophy"></i>
+                        </div>
+                        <div class="stat-value">#${userRank}</div>
+                        <div class="stat-label">Your Rank</div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-star"></i>
+                        </div>
+                        <div class="stat-value">${userScore}</div>
+                        <div class="stat-label">Your Points</div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-award"></i>
+                        </div>
+                        <div class="stat-value">3</div>
+                        <div class="stat-label">Badges Earned</div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                        <div class="stat-value">+15%</div>
+                        <div class="stat-label">Progress</div>
+                    </div>
+                `;
+            }
+        }
+
+        // Update leaderboard title based on filters
+        function updateLeaderboardTitle() {
+            const title = document.getElementById('leaderboardTitle');
+            const subtitle = document.getElementById('leaderboardSubtitle');
+            
+            let titleText = 'Global Leaderboard';
+            let subtitleText = 'Top performers across all subjects';
+            
+            if (currentFilters.subject !== 'all') {
+                const subjectName = currentFilters.subject.charAt(0).toUpperCase() + currentFilters.subject.slice(1);
+                titleText = `${subjectName} Leaderboard`;
+                subtitleText = `Top performers in ${subjectName}`;
+            }
+            
+            if (currentFilters.classGroup !== 'all') {
+                const className = currentFilters.classGroup.split('-').map(word => 
+                    word.charAt(0).toUpperCase() + word.slice(1)
+                ).join(' ');
+                titleText = `${className} Leaderboard`;
+                subtitleText = `Performance within ${className}`;
+            }
+            
+            title.textContent = titleText;
+            subtitle.textContent = subtitleText;
+            document.getElementById('totalParticipants').textContent = `${leaderboardData.students.length} students`;
+            document.getElementById('lastUpdated').textContent = new Date().toLocaleTimeString();
+        }
+
+        // Render the leaderboard list
+        function renderLeaderboard() {
+            const container = document.getElementById('leaderboardList');
+            
+            // Filter students based on current filters
+            let filteredStudents = [...leaderboardData.students];
+            
+            if (currentFilters.subject !== 'all') {
+                filteredStudents = filteredStudents.filter(student => 
+                    student.subject === currentFilters.subject
+                );
+            }
+            
+            if (currentFilters.classGroup !== 'all') {
+                filteredStudents = filteredStudents.filter(student => 
+                    student.class === currentFilters.classGroup
+                );
+            }
+            
+            // Sort by score (descending)
+            filteredStudents.sort((a, b) => b.score - a.score);
+            
+            if (filteredStudents.length === 0) {
+                container.innerHTML = `
+                    <div style="text-align: center; padding: 40px; color: var(--gray);">
+                        <i class="fas fa-users" style="font-size: 3rem; margin-bottom: 15px; opacity: 0.5;"></i>
+                        <h3>No students found</h3>
+                        <p>Try adjusting your filters</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            container.innerHTML = filteredStudents.map((student, index) => {
+                const rank = index + 1;
+                const isCurrentUser = student.name === currentUser.name;
+                const rankClass = rank === 1 ? 'rank-1' : 
+                                rank === 2 ? 'rank-2' : 
+                                rank === 3 ? 'rank-3' : 'rank-other';
+                
+                return `
+                    <div class="leaderboard-item ${rankClass} ${isCurrentUser ? 'current-user' : ''}">
+                        <div class="leaderboard-rank">${rank}</div>
+                        
+                        <div class="user-info-large">
+                            <div class="user-avatar-large">${student.avatar}</div>
+                            <div class="user-details">
+                                <h3>${student.name} ${isCurrentUser ? '(You)' : ''}</h3>
+                                <p>${student.subject.charAt(0).toUpperCase() + student.subject.slice(1)} • ${student.class.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ')}</p>
+                                <div class="badge-indicator">
+                                    ${Array.from({length: student.badges}, (_, i) => 
+                                        `<div class="badge" title="Badge ${i+1}">${i+1}</div>`
+                                    ).join('')}
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="score-info">
+                            <div class="score-value">${student.score}</div>
+                            <div class="score-label">points</div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Render achievements (student view)
+        function renderAchievements() {
+            const container = document.getElementById('achievementsGrid');
+            const earnedCount = leaderboardData.achievements.filter(a => a.earned).length;
+            
+            document.getElementById('achievementsCount').textContent = earnedCount;
+            
+            container.innerHTML = leaderboardData.achievements.map(achievement => `
+                <div class="achievement-card ${achievement.earned ? 'earned' : 'locked'}">
+                    <div class="achievement-icon">
+                        <i class="fas ${achievement.icon}"></i>
+                    </div>
+                    <div class="achievement-name">${achievement.name}</div>
+                    <div class="achievement-desc">${achievement.desc}</div>
+                </div>
+            `).join('');
+        }
+
+        // Teacher-specific functions
+        function exportReport() {
+            alert('📊 Generating and downloading class performance report...');
+            // In a real app, this would generate a PDF or CSV report
+        }
+
+        function viewDetailedAnalytics() {
+            alert('Opening detailed analytics dashboard...');
+            // In a real app, this would open a comprehensive analytics view
+        }
+
+        // Initialize achievements for students
+        if (currentUser.role === 'student') {
+            renderAchievements();
+        }
+
+        // Initialize the page when loaded
+        document.addEventListener('DOMContentLoaded', initLeaderboard);
+    </script>
+</body>
+</html>

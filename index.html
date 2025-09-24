@@ -1,0 +1,717 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EduQuest - Interactive Learning Platform</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        :root {
+            --primary: #4361ee;
+            --primary-dark: #3a56d4;
+            --secondary: #7209b7;
+            --accent: #f72585;
+            --success: #4cc9f0;
+            --warning: #ffd166;
+            --danger: #ef476f;
+            --light: #f8f9fa;
+            --dark: #212529;
+            --gray: #6c757d;
+            --light-gray: #e9ecef;
+            --gradient: linear-gradient(135deg, #4361ee 0%, #7209b7 100%);
+            --card-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
+        }
+
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            color: var(--dark);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header Styles */
+        header {
+            background: white;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+        }
+
+        .logo-icon {
+            background: var(--gradient);
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+        }
+
+        .logo-text {
+            font-size: 24px;
+            font-weight: 700;
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* Navigation Styles */
+        .nav-links {
+            display: flex;
+            gap: 25px;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--dark);
+            font-weight: 600;
+            transition: var(--transition);
+            position: relative;
+            padding: 5px 0;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary);
+        }
+
+        .nav-links a.active {
+            color: var(--primary);
+        }
+
+        .nav-links a.active::after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 3px;
+            bottom: 0;
+            left: 0;
+            background: var(--primary);
+            border-radius: 2px;
+        }
+
+        .cta-button {
+            background: var(--gradient);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 50px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            box-shadow: 0 4px 15px rgba(67, 97, 238, 0.3);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(67, 97, 238, 0.4);
+        }
+
+        /* Hero Section */
+        .hero {
+            padding: 100px 0 80px;
+            text-align: center;
+            position: relative;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 100" fill="%234361ee" opacity="0.03"><polygon points="0,0 1000,50 1000,100 0,100"/></svg>') no-repeat bottom;
+            background-size: cover;
+        }
+
+        .hero-content {
+            max-width: 800px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 20px;
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            line-height: 1.2;
+        }
+
+        .tagline {
+            font-size: 1.4rem;
+            color: var(--gray);
+            margin-bottom: 30px;
+            font-weight: 500;
+        }
+
+        /* Role Selection Section */
+        .role-selection {
+            padding: 60px 0;
+            background: white;
+            border-radius: 30px;
+            margin-top: 40px;
+            box-shadow: var(--card-shadow);
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        .section-title h2 {
+            font-size: 2.5rem;
+            color: var(--dark);
+            margin-bottom: 15px;
+        }
+
+        .section-title p {
+            font-size: 1.2rem;
+            color: var(--gray);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .role-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .role-card {
+            background: var(--light);
+            padding: 40px 30px;
+            border-radius: 20px;
+            text-align: center;
+            transition: var(--transition);
+            cursor: pointer;
+            border: 3px solid transparent;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .role-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: var(--gradient);
+            transform: scaleX(0);
+            transition: var(--transition);
+        }
+
+        .role-card:hover {
+            transform: translateY(-10px);
+            box-shadow: var(--card-shadow);
+            border-color: var(--primary);
+        }
+
+        .role-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .role-icon {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: var(--gradient);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            margin: 0 auto 20px;
+            transition: var(--transition);
+        }
+
+        .role-card:hover .role-icon {
+            transform: scale(1.1);
+        }
+
+        .role-card h3 {
+            font-size: 1.8rem;
+            margin-bottom: 15px;
+            color: var(--dark);
+        }
+
+        .role-card p {
+            color: var(--gray);
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+
+        .role-features {
+            text-align: left;
+            margin-top: 20px;
+        }
+
+        .role-features li {
+            margin-bottom: 8px;
+            color: var(--gray);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .role-features i {
+            color: var(--primary);
+            font-size: 14px;
+        }
+
+        .student-card {
+            border-color: #4361ee;
+        }
+
+        .teacher-card {
+            border-color: #f72585;
+        }
+
+        .student-card .role-icon {
+            background: linear-gradient(135deg, #4361ee 0%, #3a56d4 100%);
+        }
+
+        .teacher-card .role-icon {
+            background: linear-gradient(135deg, #f72585 0%, #b5179e 100%);
+        }
+
+        /* Platform Overview */
+        .platform-overview {
+            padding: 80px 0;
+            text-align: center;
+        }
+
+        .overview-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            margin-top: 50px;
+        }
+
+        .overview-card {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: var(--card-shadow);
+            transition: var(--transition);
+        }
+
+        .overview-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .overview-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 15px;
+            background: var(--gradient);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            margin: 0 auto 20px;
+        }
+
+        .overview-card h3 {
+            font-size: 1.3rem;
+            margin-bottom: 15px;
+            color: var(--dark);
+        }
+
+        .overview-card p {
+            color: var(--gray);
+        }
+
+        /* Footer */
+        footer {
+            background: var(--dark);
+            color: white;
+            text-align: center;
+            padding: 40px 0;
+            margin-top: 60px;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 40px;
+            margin-bottom: 30px;
+            text-align: left;
+        }
+
+        .footer-column h3 {
+            margin-bottom: 20px;
+            color: white;
+        }
+
+        .footer-column ul {
+            list-style: none;
+        }
+
+        .footer-column ul li {
+            margin-bottom: 10px;
+        }
+
+        .footer-column ul li a {
+            color: #aaa;
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .footer-column ul li a:hover {
+            color: white;
+        }
+
+        .copyright {
+            border-top: 1px solid #444;
+            padding-top: 20px;
+            color: #aaa;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .nav-links {
+                gap: 15px;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .tagline {
+                font-size: 1.2rem;
+            }
+
+            .role-cards {
+                grid-template-columns: 1fr;
+            }
+
+            .role-card {
+                padding: 30px 20px;
+            }
+
+            .section-title h2 {
+                font-size: 2rem;
+            }
+
+            .footer-content {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+        }
+
+        /* Animation */
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .floating {
+            animation: float 3s ease-in-out infinite;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <a href="index.html" class="logo">
+                    <div class="logo-icon">
+                        <i class="fas fa-graduation-cap"></i>
+                    </div>
+                    <div class="logo-text">EduQuest</div>
+                </a>
+                
+                <nav class="nav-links">
+                    <a href="index.html" class="active">Home</a>
+                    <a href="#features">Features</a>
+                    <a href="#about">About</a>
+                    <a href="#contact">Contact</a>
+                </nav>
+                
+                <button class="cta-button" id="startLearningBtn">
+                    <i class="fas fa-rocket"></i> Get Started
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <h1>Transform Learning Into an Adventure</h1>
+                <p class="tagline">EduQuest makes education engaging for students and manageable for teachers through interactive quizzes, video lectures, and real-time progress tracking.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Role Selection Section -->
+    <section class="role-selection" id="features">
+        <div class="container">
+            <div class="section-title">
+                <h2>Start Your EduQuest Journey</h2>
+                <p>Choose your role to access the perfect learning experience</p>
+            </div>
+            
+            <div class="role-cards">
+                <!-- Student Card -->
+                <div class="role-card student-card" onclick="selectRole('student')">
+                    <div class="role-icon floating">
+                        <i class="fas fa-user-graduate"></i>
+                    </div>
+                    <h3>I'm a Student</h3>
+                    <p>Engage in interactive learning, track your progress, and climb the leaderboard</p>
+                    
+                    <ul class="role-features">
+                        <li><i class="fas fa-check"></i> Interactive quizzes with flashcards</li>
+                        <li><i class="fas fa-check"></i> Video lectures and assignments</li>
+                        <li><i class="fas fa-check"></i> Personal progress dashboard</li>
+                        <li><i class="fas fa-check"></i> Achievement badges and rewards</li>
+                    </ul>
+                    
+                    <button class="cta-button" style="margin-top: 20px;">
+                        <i class="fas fa-play"></i> Start as Student
+                    </button>
+                </div>
+                
+                <!-- Teacher Card -->
+                <div class="role-card teacher-card" onclick="selectRole('teacher')">
+                    <div class="role-icon floating">
+                        <i class="fas fa-chalkboard-teacher"></i>
+                    </div>
+                    <h3>I'm a Teacher</h3>
+                    <p>Create engaging content, monitor student progress, and manage your classroom</p>
+                    
+                    <ul class="role-features">
+                        <li><i class="fas fa-check"></i> Upload lectures and study materials</li>
+                        <li><i class="fas fa-check"></i> Create quizzes and assignments</li>
+                        <li><i class="fas fa-check"></i> Track student performance</li>
+                        <li><i class="fas fa-check"></i> Generate progress reports</li>
+                    </ul>
+                    
+                    <button class="cta-button" style="margin-top: 20px; background: linear-gradient(135deg, #f72585 0%, #b5179e 100%);">
+                        <i class="fas fa-chalkboard"></i> Start as Teacher
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Platform Overview -->
+    <section class="platform-overview" id="about">
+        <div class="container">
+            <div class="section-title">
+                <h2>Everything You Need in One Platform</h2>
+                <p>EduQuest combines the best tools for modern education</p>
+            </div>
+            
+            <div class="overview-grid">
+                <div class="overview-card">
+                    <div class="overview-icon">
+                        <i class="fas fa-brain"></i>
+                    </div>
+                    <h3>Interactive Quizzes</h3>
+                    <p>Test knowledge with engaging multiple-choice questions and flashcard learning modes</p>
+                </div>
+                
+                <div class="overview-card">
+                    <div class="overview-icon">
+                        <i class="fas fa-video"></i>
+                    </div>
+                    <h3>Video Lectures</h3>
+                    <p>Access comprehensive video lessons and downloadable study materials</p>
+                </div>
+                
+                <div class="overview-card">
+                    <div class="overview-icon">
+                        <i class="fas fa-trophy"></i>
+                    </div>
+                    <h3>Progress Tracking</h3>
+                    <p>Monitor improvement with detailed analytics and achievement milestones</p>
+                </div>
+                
+                <div class="overview-card">
+                    <div class="overview-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <h3>Leaderboards</h3>
+                    <p>Stay motivated with competitive rankings and performance comparisons</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer id="contact">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-column">
+                    <h3>EduQuest</h3>
+                    <p>Making learning engaging and effective through technology and innovation.</p>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>Quick Links</h3>
+                    <ul>
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="#features">Features</a></li>
+                        <li><a href="#about">About</a></li>
+                        <li><a href="#contact">Contact</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>Platform Pages</h3>
+                    <ul>
+                        <li><a href="#" onclick="selectRole('student')">Student Dashboard</a></li>
+                        <li><a href="#" onclick="selectRole('teacher')">Teacher Dashboard</a></li>
+                        <li><a href="leaderboard.html">Leaderboard</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>Contact Info</h3>
+                    <ul>
+                        <li><i class="fas fa-envelope"></i> support@eduquest.com</li>
+                        <li><i class="fas fa-phone"></i> +1 (555) 123-LEARN</li>
+                        <li><i class="fas fa-map-marker-alt"></i> Education District, Learn City</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="copyright">
+                <p>EduQuest &copy; 2023 - Interactive Learning Platform. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Role selection function
+        function selectRole(role) {
+            // Save role to localStorage
+            localStorage.setItem('eduquest_userRole', role);
+            localStorage.setItem('eduquest_user', role === 'student' ? 'Student' : 'Teacher');
+            
+            // Show loading state
+            const buttons = document.querySelectorAll('.cta-button');
+            buttons.forEach(btn => {
+                btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Redirecting...';
+                btn.disabled = true;
+            });
+            
+            // Redirect after short delay
+            setTimeout(() => {
+                if (role === 'student') {
+                    window.location.href = 'student-dashboard.html';
+                } else {
+                    window.location.href = 'teacher-dashboard.html';
+                }
+            }, 1500);
+        }
+
+        // Check if user already has a role selected
+        function checkExistingRole() {
+            const existingRole = localStorage.getItem('eduquest_userRole');
+            if (existingRole) {
+                // Show "Continue as..." message
+                const roleCards = document.querySelectorAll('.role-card');
+                roleCards.forEach(card => {
+                    const role = card.classList.contains('student-card') ? 'student' : 'teacher';
+                    if (role === existingRole) {
+                        const button = card.querySelector('button');
+                        button.innerHTML = `<i class="fas fa-redo"></i> Continue as ${existingRole}`;
+                        button.style.background = role === 'student' ? 
+                            'linear-gradient(135deg, #4361ee 0%, #3a56d4 100%)' : 
+                            'linear-gradient(135deg, #f72585 0%, #b5179e 100%)';
+                    }
+                });
+            }
+        }
+
+        // Get Started button click handler
+        document.getElementById('startLearningBtn').addEventListener('click', function() {
+            this.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Choosing Role...';
+            // Scroll to role selection section
+            document.querySelector('.role-selection').scrollIntoView({ 
+                behavior: 'smooth' 
+            });
+        });
+
+        // Add click handlers to role cards
+        document.querySelectorAll('.role-card').forEach(card => {
+            card.addEventListener('click', function() {
+                const role = this.classList.contains('student-card') ? 'student' : 'teacher';
+                selectRole(role);
+            });
+        });
+
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+
+        // Initialize the page
+        document.addEventListener('DOMContentLoaded', function() {
+            checkExistingRole();
+        });
+    </script>
+</body>
+</html>

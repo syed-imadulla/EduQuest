@@ -1,0 +1,835 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EduQuest - Student Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        :root {
+            --primary: #4361ee;
+            --primary-dark: #3a56d4;
+            --secondary: #7209b7;
+            --accent: #f72585;
+            --success: #4cc9f0;
+            --warning: #ffd166;
+            --danger: #ef476f;
+            --light: #f8f9fa;
+            --dark: #212529;
+            --gray: #6c757d;
+            --light-gray: #e9ecef;
+            --gradient: linear-gradient(135deg, #4361ee 0%, #7209b7 100%);
+            --card-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
+        }
+
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            color: var(--dark);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header & Navigation Styles */
+        header {
+            background: white;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+        }
+
+        .logo-icon {
+            background: var(--gradient);
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+        }
+
+        .logo-text {
+            font-size: 24px;
+            font-weight: 700;
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* Navigation Styles */
+        .nav-links {
+            display: flex;
+            gap: 30px;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--dark);
+            font-weight: 600;
+            transition: var(--transition);
+            position: relative;
+            padding: 5px 0;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary);
+        }
+
+        .nav-links a.active {
+            color: var(--primary);
+        }
+
+        .nav-links a.active::after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 3px;
+            bottom: 0;
+            left: 0;
+            background: var(--primary);
+            border-radius: 2px;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .user-avatar {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            background: var(--primary);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+
+        .role-badge {
+            background: var(--primary);
+            color: white;
+            padding: 3px 10px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        /* Welcome Section */
+        .welcome-section {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            margin: 30px 0;
+            box-shadow: var(--card-shadow);
+            text-align: center;
+        }
+
+        .welcome-title {
+            font-size: 2.2rem;
+            margin-bottom: 10px;
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .welcome-subtitle {
+            font-size: 1.1rem;
+            color: var(--gray);
+            margin-bottom: 20px;
+        }
+
+        /* Quick Stats */
+        .quick-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: var(--card-shadow);
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: var(--gradient);
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .stat-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            background: var(--gradient);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            margin: 0 auto 15px;
+        }
+
+        .stat-value {
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: var(--gray);
+        }
+
+        /* Dashboard Sections */
+        .dashboard-section {
+            background: white;
+            border-radius: 15px;
+            box-shadow: var(--card-shadow);
+            padding: 30px;
+            margin-bottom: 30px;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid var(--light-gray);
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            color: var(--dark);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section-title i {
+            color: var(--primary);
+        }
+
+        .view-all {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 0.9rem;
+        }
+
+        /* Quick Actions */
+        .quick-actions {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .action-card {
+            background: var(--light);
+            padding: 25px;
+            border-radius: 12px;
+            text-align: center;
+            transition: var(--transition);
+            cursor: pointer;
+            border: 2px solid transparent;
+        }
+
+        .action-card:hover {
+            border-color: var(--primary);
+            transform: translateY(-3px);
+            background: white;
+        }
+
+        .action-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 15px;
+            background: var(--gradient);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            margin: 0 auto 15px;
+        }
+
+        .action-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--dark);
+        }
+
+        .action-desc {
+            font-size: 0.9rem;
+            color: var(--gray);
+        }
+
+        /* Recent Activity */
+        .activity-list {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .activity-item {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            border-radius: 10px;
+            background: var(--light);
+            transition: var(--transition);
+        }
+
+        .activity-item:hover {
+            background: #f0f2f5;
+        }
+
+        .activity-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--primary);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            flex-shrink: 0;
+            font-size: 14px;
+        }
+
+        .activity-details {
+            flex-grow: 1;
+        }
+
+        .activity-text {
+            margin-bottom: 5px;
+            font-weight: 500;
+        }
+
+        .activity-time {
+            font-size: 0.85rem;
+            color: var(--gray);
+        }
+
+        .activity-score {
+            font-weight: 700;
+            color: var(--primary);
+            font-size: 1.1rem;
+        }
+
+        /* Badges Grid */
+        .badges-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            gap: 20px;
+        }
+
+        .badge-card {
+            text-align: center;
+            padding: 20px 15px;
+            border-radius: 12px;
+            background: var(--light);
+            transition: var(--transition);
+        }
+
+        .badge-card.earned {
+            background: white;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+
+        .badge-card.earned:hover {
+            transform: translateY(-5px);
+        }
+
+        .badge-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            margin: 0 auto 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            position: relative;
+        }
+
+        .badge-icon.earned {
+            background: var(--gradient);
+            color: white;
+        }
+
+        .badge-icon.locked {
+            background: var(--light-gray);
+            color: var(--gray);
+        }
+
+        .badge-name {
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        /* Leaderboard Preview */
+        .leaderboard-preview {
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .leaderboard-item {
+            display: flex;
+            align-items: center;
+            padding: 12px 15px;
+            border-bottom: 1px solid var(--light-gray);
+        }
+
+        .leaderboard-item:last-child {
+            border-bottom: none;
+        }
+
+        .leaderboard-rank {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: var(--light-gray);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            margin-right: 15px;
+            flex-shrink: 0;
+        }
+
+        .leaderboard-item:first-child .leaderboard-rank {
+            background: var(--warning);
+            color: var(--dark);
+        }
+
+        .leaderboard-item:nth-child(2) .leaderboard-rank {
+            background: var(--light-gray);
+            color: var(--dark);
+        }
+
+        .leaderboard-item:nth-child(3) .leaderboard-rank {
+            background: #cd7f32;
+            color: white;
+        }
+
+        .leaderboard-user {
+            flex-grow: 1;
+            font-weight: 500;
+        }
+
+        .leaderboard-score {
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 30px 0;
+            color: var(--gray);
+            font-size: 0.9rem;
+            margin-top: 50px;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .nav-links {
+                gap: 20px;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+
+            .welcome-title {
+                font-size: 1.8rem;
+            }
+
+            .quick-stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .quick-actions {
+                grid-template-columns: 1fr;
+            }
+
+            .badges-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+
+            .section-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+        }
+
+        /* Animation */
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header with Navigation -->
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <a href="index.html" class="logo">
+                    <div class="logo-icon">
+                        <i class="fas fa-graduation-cap"></i>
+                    </div>
+                    <div class="logo-text">EduQuest</div>
+                </a>
+                
+                <!-- Navigation Links -->
+                <nav class="nav-links">
+                    <a href="student-dashboard.html" class="active">Dashboard</a>
+                    <a href="student-quiz.html">Quizzes</a>
+                    <a href="student-lectures.html">Lectures</a>
+                    <a href="leaderboard.html">Leaderboard</a>
+                </nav>
+                
+                <div class="user-info">
+                    <div class="user-avatar" id="userAvatar">S</div>
+                    <span id="userDisplay">Student</span>
+                    <div class="role-badge">Student</div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container">
+        <!-- Welcome Section -->
+        <section class="welcome-section">
+            <h1 class="welcome-title">Welcome back, <span id="studentName">Student</span>! 🎉</h1>
+            <p class="welcome-subtitle">Continue your learning journey and track your progress</p>
+            
+            <!-- Quick Stats -->
+            <div class="quick-stats">
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <div class="stat-value" id="totalPoints">0</div>
+                    <div class="stat-label">Total Points</div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-medal"></i>
+                    </div>
+                    <div class="stat-value" id="badgesCount">0</div>
+                    <div class="stat-label">Badges Earned</div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-fire"></i>
+                    </div>
+                    <div class="stat-value" id="streakDays">0</div>
+                    <div class="stat-label">Day Streak</div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-trophy"></i>
+                    </div>
+                    <div class="stat-value" id="rank">#-</div>
+                    <div class="stat-label">Global Rank</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Quick Actions Section -->
+        <section class="dashboard-section">
+            <div class="section-header">
+                <h2 class="section-title"><i class="fas fa-bolt"></i> Quick Actions</h2>
+            </div>
+            
+            <div class="quick-actions">
+                <div class="action-card" onclick="window.location.href='student-quiz.html'">
+                    <div class="action-icon">
+                        <i class="fas fa-play"></i>
+                    </div>
+                    <h3 class="action-title">Continue Learning</h3>
+                    <p class="action-desc">Resume your last quiz or start a new one</p>
+                </div>
+                
+                <div class="action-card" onclick="window.location.href='student-lectures.html'">
+                    <div class="action-icon">
+                        <i class="fas fa-video"></i>
+                    </div>
+                    <h3 class="action-title">Watch Lectures</h3>
+                    <p class="action-desc">Access video lessons and study materials</p>
+                </div>
+                
+                <div class="action-card" onclick="window.location.href='modules.html'">
+                    <div class="action-icon">
+                        <i class="fas fa-th-large"></i>
+                    </div>
+                    <h3 class="action-title">Browse Modules</h3>
+                    <p class="action-desc">Explore different subjects and topics</p>
+                </div>
+                
+                <div class="action-card" onclick="window.location.href='leaderboard.html'">
+                    <div class="action-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <h3 class="action-title">View Leaderboard</h3>
+                    <p class="action-desc">See how you rank among other students</p>
+                </div>
+            </div>
+        </section>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px;">
+            <!-- Recent Activity Section -->
+            <section class="dashboard-section">
+                <div class="section-header">
+                    <h2 class="section-title"><i class="fas fa-clock"></i> Recent Activity</h2>
+                    <a href="progress.html" class="view-all">View All <i class="fas fa-chevron-right"></i></a>
+                </div>
+                
+                <div class="activity-list" id="recentActivity">
+                    <!-- Activities will be dynamically generated -->
+                </div>
+            </section>
+
+            <!-- Badges Section -->
+            <section class="dashboard-section">
+                <div class="section-header">
+                    <h2 class="section-title"><i class="fas fa-award"></i> Recent Badges</h2>
+                    <a href="progress.html" class="view-all">View All <i class="fas fa-chevron-right"></i></a>
+                </div>
+                
+                <div class="badges-grid" id="recentBadges">
+                    <!-- Badges will be dynamically generated -->
+                </div>
+            </section>
+        </div>
+
+        <!-- Leaderboard Preview -->
+        <section class="dashboard-section">
+            <div class="section-header">
+                <h2 class="section-title"><i class="fas fa-trophy"></i> Leaderboard Preview</h2>
+                <a href="leaderboard.html" class="view-all">Full Leaderboard <i class="fas fa-chevron-right"></i></a>
+            </div>
+            
+            <div class="leaderboard-preview" id="leaderboardPreview">
+                <!-- Leaderboard items will be dynamically generated -->
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <p>EduQuest &copy; 2023 - Student Learning Platform</p>
+        </div>
+    </footer>
+
+    <script>
+        // Sample data - in a real app, this would come from a database
+        const studentData = {
+            name: "Alex Johnson",
+            points: 1250,
+            badges: 7,
+            streak: 5,
+            rank: 12,
+            recentActivities: [
+                { text: "Completed Mathematics Quiz", score: "+50 points", time: "2 hours ago", icon: "fa-calculator" },
+                { text: "Earned 'Math Whiz' badge", score: "", time: "Yesterday", icon: "fa-medal" },
+                { text: "Watched Science Lecture", score: "+10 points", time: "1 day ago", icon: "fa-flask" },
+                { text: "Completed English Assignment", score: "+30 points", time: "2 days ago", icon: "fa-book" },
+                { text: "Reached 1000 total points", score: "", time: "3 days ago", icon: "fa-trophy" }
+            ],
+            recentBadges: [
+                { name: "Quick Starter", earned: true, icon: "fa-rocket" },
+                { name: "Math Whiz", earned: true, icon: "fa-calculator" },
+                { name: "Science Explorer", earned: false, icon: "fa-flask" },
+                { name: "Perfect Score", earned: true, icon: "fa-star" },
+                { name: "Week Warrior", earned: false, icon: "fa-calendar" },
+                { name: "Book Worm", earned: true, icon: "fa-book" }
+            ],
+            leaderboard: [
+                { name: "Sarah Chen", score: 1850, isCurrentUser: false },
+                { name: "Mike Rodriguez", score: 1670, isCurrentUser: false },
+                { name: "Emma Wilson", score: 1520, isCurrentUser: false },
+                { name: "Alex Johnson", score: 1250, isCurrentUser: true },
+                { name: "David Kim", score: 1180, isCurrentUser: false }
+            ]
+        };
+
+        // Check if user is actually a student
+        function checkUserRole() {
+            const role = localStorage.getItem('eduquest_userRole');
+            if (role !== 'student') {
+                window.location.href = 'index.html';
+                return false;
+            }
+            return true;
+        }
+
+        // Load student data
+        function loadStudentData() {
+            if (!checkUserRole()) return;
+
+            const userName = localStorage.getItem('eduquest_user') || 'Student';
+            document.getElementById('studentName').textContent = userName;
+            document.getElementById('userDisplay').textContent = userName;
+            document.getElementById('userAvatar').textContent = userName.charAt(0).toUpperCase();
+
+            // Update stats
+            document.getElementById('totalPoints').textContent = studentData.points;
+            document.getElementById('badgesCount').textContent = studentData.badges;
+            document.getElementById('streakDays').textContent = studentData.streak;
+            document.getElementById('rank').textContent = `#${studentData.rank}`;
+        }
+
+        // Render recent activity
+        function renderRecentActivity() {
+            const container = document.getElementById('recentActivity');
+            container.innerHTML = '';
+
+            studentData.recentActivities.forEach(activity => {
+                const activityItem = document.createElement('div');
+                activityItem.className = 'activity-item';
+                
+                activityItem.innerHTML = `
+                    <div class="activity-icon">
+                        <i class="fas ${activity.icon}"></i>
+                    </div>
+                    <div class="activity-details">
+                        <div class="activity-text">${activity.text}</div>
+                        <div class="activity-time">${activity.time}</div>
+                    </div>
+                    <div class="activity-score">${activity.score}</div>
+                `;
+                
+                container.appendChild(activityItem);
+            });
+        }
+
+        // Render recent badges
+        function renderRecentBadges() {
+            const container = document.getElementById('recentBadges');
+            container.innerHTML = '';
+
+            studentData.recentBadges.forEach(badge => {
+                const badgeCard = document.createElement('div');
+                badgeCard.className = `badge-card ${badge.earned ? 'earned' : ''}`;
+                
+                badgeCard.innerHTML = `
+                    <div class="badge-icon ${badge.earned ? 'earned pulse' : 'locked'}">
+                        <i class="fas ${badge.icon}"></i>
+                    </div>
+                    <div class="badge-name">${badge.name}</div>
+                `;
+                
+                container.appendChild(badgeCard);
+            });
+        }
+
+        // Render leaderboard preview
+        function renderLeaderboardPreview() {
+            const container = document.getElementById('leaderboardPreview');
+            container.innerHTML = '';
+
+            studentData.leaderboard.forEach((user, index) => {
+                const leaderboardItem = document.createElement('div');
+                leaderboardItem.className = 'leaderboard-item';
+                if (user.isCurrentUser) {
+                    leaderboardItem.style.background = 'rgba(67, 97, 238, 0.05)';
+                    leaderboardItem.style.borderRadius = '8px';
+                    leaderboardItem.style.margin = '5px 0';
+                }
+                
+                leaderboardItem.innerHTML = `
+                    <div class="leaderboard-rank">${index + 1}</div>
+                    <div class="leaderboard-user">${user.name}</div>
+                    <div class="leaderboard-score">${user.score} pts</div>
+                `;
+                
+                container.appendChild(leaderboardItem);
+            });
+        }
+
+        // Initialize the dashboard
+        function initDashboard() {
+            loadStudentData();
+            renderRecentActivity();
+            renderRecentBadges();
+            renderLeaderboardPreview();
+        }
+
+        // Run when page loads
+        document.addEventListener('DOMContentLoaded', initDashboard);
+    </script>
+</body>
+</html>

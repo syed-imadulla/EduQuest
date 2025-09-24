@@ -1,0 +1,1184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EduQuest - Student Lectures</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        :root {
+            --primary: #4361ee;
+            --primary-dark: #3a56d4;
+            --secondary: #7209b7;
+            --accent: #f72585;
+            --success: #4cc9f0;
+            --warning: #ffd166;
+            --danger: #ef476f;
+            --light: #f8f9fa;
+            --dark: #212529;
+            --gray: #6c757d;
+            --light-gray: #e9ecef;
+            --gradient: linear-gradient(135deg, #4361ee 0%, #7209b7 100%);
+            --card-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
+        }
+
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            color: var(--dark);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header & Navigation Styles */
+        header {
+            background: white;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+        }
+
+        .logo-icon {
+            background: var(--gradient);
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+        }
+
+        .logo-text {
+            font-size: 24px;
+            font-weight: 700;
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* Navigation Styles */
+        .nav-links {
+            display: flex;
+            gap: 30px;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--dark);
+            font-weight: 600;
+            transition: var(--transition);
+            position: relative;
+            padding: 5px 0;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary);
+        }
+
+        .nav-links a.active {
+            color: var(--primary);
+        }
+
+        .nav-links a.active::after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 3px;
+            bottom: 0;
+            left: 0;
+            background: var(--primary);
+            border-radius: 2px;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .user-avatar {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            background: var(--primary);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+
+        .role-badge {
+            background: var(--primary);
+            color: white;
+            padding: 3px 10px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        /* Page Header */
+        .page-header {
+            text-align: center;
+            margin: 40px 0 30px;
+        }
+
+        .page-title {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .page-subtitle {
+            font-size: 1.2rem;
+            color: var(--gray);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* Subject Filter */
+        .subject-filter {
+            display: flex;
+            gap: 15px;
+            margin: 30px 0;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .filter-btn {
+            padding: 10px 20px;
+            border: 2px solid var(--primary);
+            background: white;
+            color: var(--primary);
+            border-radius: 25px;
+            cursor: pointer;
+            transition: var(--transition);
+            font-weight: 600;
+        }
+
+        .filter-btn:hover, .filter-btn.active {
+            background: var(--primary);
+            color: white;
+        }
+
+        /* Content Tabs */
+        .content-tabs {
+            display: flex;
+            background: white;
+            border-radius: 15px 15px 0 0;
+            overflow: hidden;
+            box-shadow: var(--card-shadow);
+            margin-bottom: 0;
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 20px;
+            background: none;
+            border: none;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .tab-btn.active {
+            background: var(--primary);
+            color: white;
+        }
+
+        .tab-btn:not(.active):hover {
+            background: var(--light-gray);
+        }
+
+        /* Tab Content */
+        .tab-content {
+            display: none;
+            background: white;
+            padding: 30px;
+            border-radius: 0 0 15px 15px;
+            box-shadow: var(--card-shadow);
+            margin-bottom: 30px;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* Content Grid */
+        .content-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 25px;
+            margin-top: 20px;
+        }
+
+        /* Lecture Card */
+        .lecture-card {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: var(--card-shadow);
+            transition: var(--transition);
+            border: 2px solid transparent;
+        }
+
+        .lecture-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--primary);
+        }
+
+        .lecture-thumbnail {
+            height: 180px;
+            background: var(--gradient);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .lecture-thumbnail::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.3);
+        }
+
+        .play-button {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 60px;
+            height: 60px;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary);
+            font-size: 20px;
+            transition: var(--transition);
+        }
+
+        .lecture-card:hover .play-button {
+            background: white;
+            transform: translate(-50%, -50%) scale(1.1);
+        }
+
+        .lecture-duration {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 3px 8px;
+            border-radius: 10px;
+            font-size: 0.8rem;
+        }
+
+        .lecture-content {
+            padding: 20px;
+        }
+
+        .lecture-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .subject-badge {
+            background: var(--light-gray);
+            padding: 3px 10px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .lecture-date {
+            font-size: 0.8rem;
+            color: var(--gray);
+        }
+
+        .lecture-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: var(--dark);
+        }
+
+        .lecture-desc {
+            color: var(--gray);
+            font-size: 0.9rem;
+            margin-bottom: 15px;
+            line-height: 1.4;
+        }
+
+        .lecture-progress {
+            margin-bottom: 15px;
+        }
+
+        .progress-bar {
+            height: 6px;
+            background: var(--light-gray);
+            border-radius: 3px;
+            overflow: hidden;
+            margin-bottom: 5px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: var(--primary);
+            border-radius: 3px;
+            transition: width 0.5s ease;
+        }
+
+        .progress-text {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.8rem;
+            color: var(--gray);
+        }
+
+        .lecture-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn {
+            padding: 8px 15px;
+            border: none;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 0.85rem;
+            text-decoration: none;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+            flex: 1;
+            justify-content: center;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+        }
+
+        .btn-secondary {
+            background: var(--light-gray);
+            color: var(--dark);
+        }
+
+        .btn-secondary:hover {
+            background: #dde1e7;
+        }
+
+        /* Assignment Card */
+        .assignment-card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: var(--card-shadow);
+            transition: var(--transition);
+            border-left: 4px solid var(--warning);
+        }
+
+        .assignment-card:hover {
+            transform: translateY(-3px);
+        }
+
+        .assignment-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 15px;
+        }
+
+        .assignment-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 5px;
+            color: var(--dark);
+        }
+
+        .assignment-subject {
+            font-size: 0.9rem;
+            color: var(--gray);
+        }
+
+        .due-date {
+            background: var(--warning);
+            color: var(--dark);
+            padding: 5px 10px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .assignment-desc {
+            color: var(--gray);
+            margin-bottom: 15px;
+            line-height: 1.4;
+        }
+
+        .assignment-meta {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 15px;
+            font-size: 0.85rem;
+            color: var(--gray);
+        }
+
+        .assignment-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        /* Notes Card */
+        .notes-card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: var(--card-shadow);
+            transition: var(--transition);
+            border-left: 4px solid var(--success);
+        }
+
+        .notes-card:hover {
+            transform: translateY(-3px);
+        }
+
+        .notes-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .notes-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 10px;
+            background: var(--success);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+        }
+
+        .notes-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 5px;
+            color: var(--dark);
+        }
+
+        .notes-subject {
+            font-size: 0.9rem;
+            color: var(--gray);
+        }
+
+        .notes-preview {
+            color: var(--gray);
+            margin-bottom: 15px;
+            line-height: 1.4;
+            font-size: 0.9rem;
+        }
+
+        .notes-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--gray);
+        }
+
+        .empty-icon {
+            font-size: 4rem;
+            margin-bottom: 20px;
+            opacity: 0.5;
+        }
+
+        /* Video Player Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 800px;
+            position: relative;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+            border-bottom: 1px solid var(--light-gray);
+        }
+
+        .modal-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+        }
+
+        .close-modal {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--gray);
+        }
+
+        .video-container {
+            position: relative;
+            padding-bottom: 56.25%; /* 16:9 aspect ratio */
+            height: 0;
+            overflow: hidden;
+        }
+
+        .video-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 30px 0;
+            color: var(--gray);
+            font-size: 0.9rem;
+            margin-top: 50px;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .nav-links {
+                gap: 15px;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+
+            .page-title {
+                font-size: 2rem;
+            }
+
+            .content-tabs {
+                flex-direction: column;
+            }
+
+            .content-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .lecture-actions, .assignment-actions, .notes-actions {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header with Navigation -->
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <a href="index.html" class="logo">
+                    <div class="logo-icon">
+                        <i class="fas fa-graduation-cap"></i>
+                    </div>
+                    <div class="logo-text">EduQuest</div>
+                </a>
+                
+                <!-- Navigation Links -->
+                <nav class="nav-links">
+                    <a href="student-dashboard.html">Dashboard</a>
+                    <a href="student-quiz.html">Quizzes</a>
+                    <a href="student-lectures.html" class="active">Lectures</a>
+                    <a href="leaderboard.html">Leaderboard</a>
+                </nav>
+                
+                <div class="user-info">
+                    <div class="user-avatar" id="userAvatar">S</div>
+                    <span id="userDisplay">Student</span>
+                    <div class="role-badge">Student</div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container">
+        <!-- Page Header -->
+        <section class="page-header">
+            <h1 class="page-title">Lectures & Assignments</h1>
+            <p class="page-subtitle">Access video lectures, study materials, and complete assignments</p>
+        </section>
+
+        <!-- Subject Filter -->
+        <div class="subject-filter">
+            <button class="filter-btn active" data-subject="all">All Subjects</button>
+            <button class="filter-btn" data-subject="math">Mathematics</button>
+            <button class="filter-btn" data-subject="science">Science</button>
+            <button class="filter-btn" data-subject="english">English</button>
+            <button class="filter-btn" data-subject="environment">Environment</button>
+        </div>
+
+        <!-- Content Tabs -->
+        <div class="content-tabs">
+            <button class="tab-btn active" data-tab="lectures">
+                <i class="fas fa-video"></i> Video Lectures
+            </button>
+            <button class="tab-btn" data-tab="assignments">
+                <i class="fas fa-tasks"></i> Assignments
+            </button>
+            <button class="tab-btn" data-tab="notes">
+                <i class="fas fa-file-alt"></i> Study Notes
+            </button>
+        </div>
+
+        <!-- Lectures Tab -->
+        <div class="tab-content active" id="lectures-tab">
+            <div class="content-grid" id="lecturesGrid">
+                <!-- Lectures will be dynamically generated -->
+            </div>
+        </div>
+
+        <!-- Assignments Tab -->
+        <div class="tab-content" id="assignments-tab">
+            <div class="content-grid" id="assignmentsGrid">
+                <!-- Assignments will be dynamically generated -->
+            </div>
+        </div>
+
+        <!-- Notes Tab -->
+        <div class="tab-content" id="notes-tab">
+            <div class="content-grid" id="notesGrid">
+                <!-- Notes will be dynamically generated -->
+            </div>
+        </div>
+    </main>
+
+    <!-- Video Player Modal -->
+    <div class="modal" id="videoModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title" id="modalTitle">Lecture Video</h3>
+                <button class="close-modal" id="closeModal">&times;</button>
+            </div>
+            <div class="video-container">
+                <iframe id="videoPlayer" src="" allowfullscreen></iframe>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <p>EduQuest &copy; 2023 - Learning Management System</p>
+        </div>
+    </footer>
+
+    <script>
+        // Sample lecture and assignment data
+        const contentData = {
+            lectures: [
+                {
+                    id: 1,
+                    title: "Introduction to Algebra",
+                    subject: "math",
+                    description: "Learn the basics of algebraic expressions and equations.",
+                    duration: "15:30",
+                    date: "2023-12-01",
+                    progress: 75,
+                    videoId: "dQw4w9WgXcQ", // Example YouTube video ID
+                    thumbnail: "math"
+                },
+                {
+                    id: 2,
+                    title: "Photosynthesis Process",
+                    subject: "science",
+                    description: "Understanding how plants convert light energy into chemical energy.",
+                    duration: "22:15",
+                    date: "2023-12-03",
+                    progress: 40,
+                    videoId: "dQw4w9WgXcQ",
+                    thumbnail: "science"
+                },
+                {
+                    id: 3,
+                    title: "Grammar Fundamentals",
+                    subject: "english",
+                    description: "Master the basic rules of English grammar and sentence structure.",
+                    duration: "18:45",
+                    date: "2023-12-05",
+                    progress: 90,
+                    videoId: "dQw4w9WgXcQ",
+                    thumbnail: "english"
+                },
+                {
+                    id: 4,
+                    title: "Climate Change Effects",
+                    subject: "environment",
+                    description: "Exploring the impact of climate change on our planet.",
+                    duration: "25:20",
+                    date: "2023-12-07",
+                    progress: 20,
+                    videoId: "dQw4w9WgXcQ",
+                    thumbnail: "environment"
+                }
+            ],
+            assignments: [
+                {
+                    id: 1,
+                    title: "Algebraic Equations Practice",
+                    subject: "math",
+                    description: "Solve 20 algebraic equations showing all your work.",
+                    dueDate: "2023-12-15",
+                    points: 100,
+                    status: "pending", // pending, submitted, graded
+                    submitted: false
+                },
+                {
+                    id: 2,
+                    title: "Science Lab Report",
+                    subject: "science",
+                    description: "Write a detailed report on the photosynthesis experiment.",
+                    dueDate: "2023-12-12",
+                    points: 150,
+                    status: "submitted",
+                    submitted: true
+                },
+                {
+                    id: 3,
+                    title: "Essay Writing",
+                    subject: "english",
+                    description: "Write a 500-word essay on your favorite book.",
+                    dueDate: "2023-12-10",
+                    points: 120,
+                    status: "graded",
+                    grade: 85,
+                    submitted: true
+                },
+                {
+                    id: 4,
+                    title: "Environmental Research",
+                    subject: "environment",
+                    description: "Research and present on local environmental issues.",
+                    dueDate: "2023-12-20",
+                    points: 200,
+                    status: "pending",
+                    submitted: false
+                }
+            ],
+            notes: [
+                {
+                    id: 1,
+                    title: "Algebra Formulas Sheet",
+                    subject: "math",
+                    description: "Complete collection of algebraic formulas and identities.",
+                    pages: 12,
+                    downloadUrl: "#"
+                },
+                {
+                    id: 2,
+                    title: "Biology Terminology",
+                    subject: "science",
+                    description: "Important biological terms and their definitions.",
+                    pages: 8,
+                    downloadUrl: "#"
+                },
+                {
+                    id: 3,
+                    title: "Grammar Rules Handbook",
+                    subject: "english",
+                    description: "Comprehensive guide to English grammar rules.",
+                    pages: 25,
+                    downloadUrl: "#"
+                },
+                {
+                    id: 4,
+                    title: "Environmental Studies Guide",
+                    subject: "environment",
+                    description: "Study guide for environmental science topics.",
+                    pages: 15,
+                    downloadUrl: "#"
+                }
+            ]
+        };
+
+        // Current state
+        let currentSubject = 'all';
+        let currentTab = 'lectures';
+
+        // Check user role and load data
+        function initLecturesPage() {
+            const role = localStorage.getItem('eduquest_userRole');
+            if (role !== 'student') {
+                window.location.href = 'index.html';
+                return;
+            }
+
+            const userName = localStorage.getItem('eduquest_user') || 'Student';
+            document.getElementById('userDisplay').textContent = userName;
+            document.getElementById('userAvatar').textContent = userName.charAt(0).toUpperCase();
+
+            setupEventListeners();
+            renderContent();
+        }
+
+        // Setup event listeners
+        function setupEventListeners() {
+            // Subject filter buttons
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    currentSubject = this.getAttribute('data-subject');
+                    renderContent();
+                });
+            });
+
+            // Tab buttons
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                    document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+                    
+                    this.classList.add('active');
+                    currentTab = this.getAttribute('data-tab');
+                    document.getElementById(`${currentTab}-tab`).classList.add('active');
+                    renderContent();
+                });
+            });
+
+            // Modal close button
+            document.getElementById('closeModal').addEventListener('click', closeVideoModal);
+            
+            // Close modal when clicking outside
+            document.getElementById('videoModal').addEventListener('click', function(e) {
+                if (e.target === this) {
+                    closeVideoModal();
+                }
+            });
+        }
+
+        // Render content based on current filters
+        function renderContent() {
+            renderLectures();
+            renderAssignments();
+            renderNotes();
+        }
+
+        // Render lectures
+        function renderLectures() {
+            const container = document.getElementById('lecturesGrid');
+            const filteredLectures = currentSubject === 'all' 
+                ? contentData.lectures 
+                : contentData.lectures.filter(lecture => lecture.subject === currentSubject);
+
+            if (filteredLectures.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-icon">📹</div>
+                        <h3>No lectures available</h3>
+                        <p>Check back later for new video content</p>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = filteredLectures.map(lecture => `
+                <div class="lecture-card" data-id="${lecture.id}">
+                    <div class="lecture-thumbnail" style="background: ${getSubjectColor(lecture.subject)}">
+                        <div class="play-button" onclick="playVideo('${lecture.videoId}', '${lecture.title}')">
+                            <i class="fas fa-play"></i>
+                        </div>
+                        <div class="lecture-duration">${lecture.duration}</div>
+                    </div>
+                    <div class="lecture-content">
+                        <div class="lecture-meta">
+                            <span class="subject-badge">${lecture.subject.charAt(0).toUpperCase() + lecture.subject.slice(1)}</span>
+                            <span class="lecture-date">${formatDate(lecture.date)}</span>
+                        </div>
+                        <h3 class="lecture-title">${lecture.title}</h3>
+                        <p class="lecture-desc">${lecture.description}</p>
+                        
+                        <div class="lecture-progress">
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: ${lecture.progress}%"></div>
+                            </div>
+                            <div class="progress-text">
+                                <span>Progress</span>
+                                <span>${lecture.progress}%</span>
+                            </div>
+                        </div>
+                        
+                        <div class="lecture-actions">
+                            <button class="btn btn-primary" onclick="playVideo('${lecture.videoId}', '${lecture.title}')">
+                                <i class="fas fa-play"></i> Watch Now
+                            </button>
+                            <button class="btn btn-secondary" onclick="addToPlaylist(${lecture.id})">
+                                <i class="fas fa-plus"></i> Save
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Render assignments
+        function renderAssignments() {
+            const container = document.getElementById('assignmentsGrid');
+            const filteredAssignments = currentSubject === 'all' 
+                ? contentData.assignments 
+                : contentData.assignments.filter(assignment => assignment.subject === currentSubject);
+
+            if (filteredAssignments.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-icon">📝</div>
+                        <h3>No assignments available</h3>
+                        <p>All caught up! New assignments will appear here</p>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = filteredAssignments.map(assignment => `
+                <div class="assignment-card">
+                    <div class="assignment-header">
+                        <div>
+                            <h3 class="assignment-title">${assignment.title}</h3>
+                            <div class="assignment-subject">${assignment.subject.charAt(0).toUpperCase() + assignment.subject.slice(1)}</div>
+                        </div>
+                        <div class="due-date">Due: ${formatDate(assignment.dueDate)}</div>
+                    </div>
+                    
+                    <p class="assignment-desc">${assignment.description}</p>
+                    
+                    <div class="assignment-meta">
+                        <span><i class="fas fa-star"></i> ${assignment.points} points</span>
+                        <span><i class="fas fa-clock"></i> ${getDaysUntilDue(assignment.dueDate)}</span>
+                    </div>
+                    
+                    <div class="assignment-actions">
+                        ${assignment.status === 'pending' ? `
+                            <button class="btn btn-primary" onclick="startAssignment(${assignment.id})">
+                                <i class="fas fa-pencil-alt"></i> Start Assignment
+                            </button>
+                            <button class="btn btn-secondary" onclick="viewAssignmentDetails(${assignment.id})">
+                                <i class="fas fa-info-circle"></i> Details
+                            </button>
+                        ` : assignment.status === 'submitted' ? `
+                            <button class="btn btn-secondary" style="background: var(--success); color: white;">
+                                <i class="fas fa-check"></i> Submitted
+                            </button>
+                            <button class="btn btn-secondary" onclick="viewSubmission(${assignment.id})">
+                                <i class="fas fa-eye"></i> View
+                            </button>
+                        ` : `
+                            <button class="btn btn-secondary" style="background: var(--primary); color: white;">
+                                <i class="fas fa-grade"></i> Grade: ${assignment.grade}%
+                            </button>
+                            <button class="btn btn-secondary" onclick="viewFeedback(${assignment.id})">
+                                <i class="fas fa-comment"></i> Feedback
+                            </button>
+                        `}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Render notes
+        function renderNotes() {
+            const container = document.getElementById('notesGrid');
+            const filteredNotes = currentSubject === 'all' 
+                ? contentData.notes 
+                : contentData.notes.filter(note => note.subject === currentSubject);
+
+            if (filteredNotes.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-icon">📚</div>
+                        <h3>No study notes available</h3>
+                        <p>Study notes will be uploaded by your teacher</p>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = filteredNotes.map(note => `
+                <div class="notes-card">
+                    <div class="notes-header">
+                        <div class="notes-icon">
+                            <i class="fas fa-file-pdf"></i>
+                        </div>
+                        <div>
+                            <h3 class="notes-title">${note.title}</h3>
+                            <div class="notes-subject">${note.subject.charAt(0).toUpperCase() + note.subject.slice(1)}</div>
+                        </div>
+                    </div>
+                    
+                    <p class="notes-preview">${note.description}</p>
+                    
+                    <div class="assignment-meta">
+                        <span><i class="fas fa-file"></i> ${note.pages} pages</span>
+                        <span><i class="fas fa-download"></i> PDF Format</span>
+                    </div>
+                    
+                    <div class="notes-actions">
+                        <a href="${note.downloadUrl}" class="btn btn-primary" download>
+                            <i class="fas fa-download"></i> Download
+                        </a>
+                        <button class="btn btn-secondary" onclick="previewNotes(${note.id})">
+                            <i class="fas fa-eye"></i> Preview
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Utility functions
+        function getSubjectColor(subject) {
+            const colors = {
+                math: 'linear-gradient(135deg, #4361ee 0%, #3a56d4 100%)',
+                science: 'linear-gradient(135deg, #f72585 0%, #b5179e 100%)',
+                english: 'linear-gradient(135deg, #4cc9f0 0%, #4895ef 100%)',
+                environment: 'linear-gradient(135deg, #ffd166 0%, #06d6a0 100%)'
+            };
+            return colors[subject] || colors.math;
+        }
+
+        function formatDate(dateString) {
+            const options = { year: 'numeric', month: 'short', day: 'numeric' };
+            return new Date(dateString).toLocaleDateString('en-US', options);
+        }
+
+        function getDaysUntilDue(dueDate) {
+            const today = new Date();
+            const due = new Date(dueDate);
+            const diffTime = due - today;
+            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+            
+            if (diffDays === 0) return 'Due today';
+            if (diffDays === 1) return 'Due tomorrow';
+            if (diffDays > 1) return `Due in ${diffDays} days`;
+            return 'Overdue';
+        }
+
+        // Action functions
+        function playVideo(videoId, title) {
+            document.getElementById('modalTitle').textContent = title;
+            document.getElementById('videoPlayer').src = `https://www.youtube.com/embed/${videoId}?autoplay=1`;
+            document.getElementById('videoModal').style.display = 'flex';
+        }
+
+        function closeVideoModal() {
+            document.getElementById('videoModal').style.display = 'none';
+            document.getElementById('videoPlayer').src = '';
+        }
+
+        function addToPlaylist(lectureId) {
+            alert('Lecture added to your playlist! 📋');
+        }
+
+        function startAssignment(assignmentId) {
+            alert('Starting assignment... This would open the assignment editor.');
+        }
+
+        function viewAssignmentDetails(assignmentId) {
+            alert('Showing assignment details...');
+        }
+
+        function viewSubmission(assignmentId) {
+            alert('Viewing your submission...');
+        }
+
+        function viewFeedback(assignmentId) {
+            alert('Showing teacher feedback...');
+        }
+
+        function previewNotes(noteId) {
+            alert('Previewing study notes...');
+        }
+
+        // Initialize the page
+        document.addEventListener('DOMContentLoaded', initLecturesPage);
+    </script>
+</body>
+</html>
